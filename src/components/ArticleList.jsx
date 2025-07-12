@@ -109,7 +109,7 @@ const ArticleList = ({state = "published"}) => {
         <div className={styles.articlesContainer}>
             {articles.map(article => (
                 <>
-                {(article.status === "published") && <ArticleCard key={article.id} article={article} />}
+                {(article.status === state) && <ArticleCard key={article.id} article={article} />}
                 </>
             ))}
         </div>

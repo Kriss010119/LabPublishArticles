@@ -1,9 +1,11 @@
+import styles from '../../styles/LoginForm.module.css';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, clearError } from '../../store/userSlice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
-export const LoginForm = ({onSuccess}) => {
+
+export const LoginForm = ({ onSuccess }) => {
     const [credentials, setCredentials] = useState({
         email: '',
         password: ''
@@ -23,32 +25,47 @@ export const LoginForm = ({onSuccess}) => {
     };
 
     return (
-        <div className="auth-form">
-            <h2>Вход</h2>
-            {error && (
-                <div className="error-message" onClick={() => dispatch(clearError())}>
-                    {error}
-                </div>
-            )}
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={credentials.email}
-                    onChange={(e) => setCredentials({...credentials, email: e.target.value})}
-                    required
-                />
-                <input
-                    type="password"
-                    placeholder="Пароль"
-                    value={credentials.password}
-                    onChange={(e) => setCredentials({...credentials, password: e.target.value})}
-                    required
-                />
-                <button type="submit" disabled={loading}>
-                    {loading ? 'Загрузка...' : 'Войти'}
-                </button>
-            </form>
+        <div className={styles.authContainer}>
+            <div className={styles.authForm}>
+                <h2>Вход</h2>
+                {error && (
+                    <div className={styles.errorMessage} onClick={() => dispatch(clearError())}>
+                        {error}
+                    </div>
+                )}
+                <form onSubmit={handleSubmit}>
+                    <div className={styles.formGroup}>
+                        <label htmlFor="email">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            value={credentials.email}
+                            onChange={(e) => setCredentials({...credentials, email: e.target.value})}
+                            required
+                            disabled={loading}
+                        />
+                    </div>
+                    <div className={styles.formGroup}>
+                        <label htmlFor="password">Пароль</label>
+                        <input
+                            type="password"
+                            id="password"
+                            value={credentials.password}
+                            onChange={(e) => setCredentials({...credentials, password: e.target.value})}
+                            required
+                            disabled={loading}
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className={styles.submitButton}
+                        disabled={loading}
+                    >
+                        {loading ? 'Загрузка...' : 'Войти'}
+                    </button>
+                </form>
+
+            </div>
         </div>
     );
 };
