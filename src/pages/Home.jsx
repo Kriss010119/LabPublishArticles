@@ -1,6 +1,9 @@
 import styles from '../styles/Home.module.css';
 import Menu from "../components/Menu";
-import ArticleList from "../components/ArticleList";
+import { ArticlePage } from "./ArticlePage";
+import { DraftPage } from "./DraftsPage";
+import { CreateArticle } from "./CreateArticle";
+import { Routes, Route } from 'react-router-dom';
 
 export const Home = () => {
     return (
@@ -13,7 +16,11 @@ export const Home = () => {
                 <Menu />
             </nav>
             <main className={styles.mainContent}>
-                <ArticleList />
+                <Routes>
+                    <Route path="/" element={<ArticlePage />} />
+                    <Route path="/drafts" element={<DraftPage />} />
+                    <Route path="/create-article" element={<CreateArticle />} />
+                </Routes>
             </main>
             <footer className={styles.footer}>
                 © {new Date().getFullYear()} Lab Publications. Все права защищены.

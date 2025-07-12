@@ -111,3 +111,9 @@
     border-bottom: 2px solid #d4a373;
     font-weight: bold;
 }
+
+.disabledLink {
+    color: #ccc;
+    cursor: not-allowed;
+    text-decoration: none;
+}

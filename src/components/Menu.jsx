@@ -7,7 +7,8 @@ import { AuthModal } from './auth/AuthModule';
 
 function Menu() {
     const dispatch = useDispatch();
-    const { isAuth, userData } = useSelector(state => state.user);
+    const { userData } = useSelector(state => state.user);
+    const isAuth = true;
     const [showAuthModal, setShowAuthModal] = useState(false);
 
     const handleLogout = () => {
@@ -19,7 +20,7 @@ function Menu() {
             <ul className={styles.navList}>
                 <li className={styles.navItem}>
                     <NavLink
-                        to="/articles"
+                        to="/"
                         className={({ isActive }) =>
                             isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
                         }
@@ -36,7 +37,17 @@ function Menu() {
                                     isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
                                 }
                             >
-                                Написать статью
+                                Создать статью
+                            </NavLink>
+                        </li>
+                        <li className={styles.navItem}>
+                            <NavLink
+                                to="/drafts"
+                                className={({ isActive }) =>
+                                    isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+                                }
+                            >
+                                Черновики
                             </NavLink>
                         </li>
                         <li className={styles.navItem}>
@@ -46,7 +57,7 @@ function Menu() {
                                     isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
                                 }
                             >
-                                Профиль ({userData?.name})
+                                Профиль ({userData?.id})
                             </NavLink>
                         </li>
                     </>
