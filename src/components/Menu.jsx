@@ -1,15 +1,17 @@
 import styles from '../styles/Menu.module.css';
 import { NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { signOut } from '../store/userSlice'; // Импортируем action для выхода
+import { signOut } from '../store/userSlice';
+import { useState } from 'react';
+import { AuthModal } from './auth/AuthModule';
 
 function Menu() {
     const dispatch = useDispatch();
-    // Получаем состояние авторизации из Redux store
-    const { isAuth } = useSelector(state => state.user);
+    const { isAuth, userData } = useSelector(state => state.user);
+    const [showAuthModal, setShowAuthModal] = useState(false);
 
     const handleLogout = () => {
-        dispatch(signOut()); // Диспатчим action для выхода
+        dispatch(signOut());
     };
 
     return (
@@ -17,7 +19,7 @@ function Menu() {
             <ul className={styles.navList}>
                 <li className={styles.navItem}>
                     <NavLink
-                        to="/home"
+                        to="/articles"
                         className={({ isActive }) =>
                             isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
                         }
@@ -29,22 +31,22 @@ function Menu() {
                     <>
                         <li className={styles.navItem}>
                             <NavLink
-                                to="/drafts"
+                                to="/create-article"
                                 className={({ isActive }) =>
                                     isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
                                 }
                             >
-                                Черновики
+                                Написать статью
                             </NavLink>
                         </li>
                         <li className={styles.navItem}>
                             <NavLink
-                                to="/personal"
+                                to="/profile"
                                 className={({ isActive }) =>
                                     isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
                                 }
                             >
-                                Личный кабинет
+                                Профиль ({userData?.name})
                             </NavLink>
                         </li>
                     </>
@@ -59,14 +61,17 @@ function Menu() {
                             Выйти
                         </NavLink>
                     ) : (
-                        <NavLink
-                            to="/login"
-                            className={({ isActive }) =>
-                                isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
-                            }
-                        >
-                            Войти
-                        </NavLink>
+                        <>
+                            <button
+                                className={styles.navLink}
+                                onClick={() => setShowAuthModal(true)}
+                            >
+                                Войти
+                            </button>
+                            {showAuthModal && (
+                                <AuthModal onClose={() => setShowAuthModal(false)} />
+                            )}
+                        </>
                     )}
                 </li>
             </ul>
