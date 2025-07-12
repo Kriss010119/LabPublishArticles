@@ -1,0 +1,134 @@
+.card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+    font-family: 'Georgia', serif;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.card:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.cardHeader {
+    padding: 20px 20px 10px;
+    position: relative;
+    background: #f9f9f9;
+    border-bottom: 1px solid #eee;
+}
+
+.dateBadge {
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    background: #333;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.title {
+    margin: 0 0 10px 0;
+    font-size: 1.4rem;
+    color: #222;
+    font-weight: 700;
+    font-family: 'Times New Roman', serif;
+}
+
+.divider {
+    height: 2px;
+    background: linear-gradient(to right, transparent, #d4a373, transparent);
+    margin: 10px 0;
+}
+
+.cardBody {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    margin: 0;
+    color: #444;
+    line-height: 1.7;
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+.readMoreBtn {
+    align-self: flex-start;
+    background: none;
+    border: none;
+    color: #d4a373;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 5px 0;
+    font-family: 'Georgia', serif;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+    margin-top: auto;
+}
+
+.readMoreBtn:hover {
+    color: #a37351;
+    text-decoration: underline;
+}
+
+.cardFooter {
+    padding: 15px 20px;
+    background: #f5f5f5;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    background: #e9ecef;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: #495057;
+    font-family: Arial, sans-serif;
+}
+
+.statusIndicator {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.statusIndicator span {
+    font-weight: bold;
+}
+
+.statusIndicator .draft {
+    color: #d4a373;
+}
+
+.statusIndicator .published {
+    color: #5a8f69;
+}
+
+.articlesContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
