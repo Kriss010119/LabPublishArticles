@@ -22,6 +22,7 @@ export const Home = () => {
                     <Route path="/drafts" element={<DraftPage />} />
                     <Route path="/create-article" element={<CreateArticle />} />
                     <Route path="/profile" element={<Profile />} />
+                    
                 </Routes>
             </main>
             <footer className={styles.footer}>
