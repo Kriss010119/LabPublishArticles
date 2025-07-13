@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import {Navigate, NavLink} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signOut } from '../store/userSlice';
 import styles from '../styles/Profile.module.css';
@@ -19,12 +19,14 @@ export const Profile = () => {
     <div className={styles.profileContainer}>
       <div className={styles.profileHeader}>
         <h2>Личный кабинет</h2>
-        <button 
-          onClick={handleLogout} 
-          className={styles.logoutButton}
-        >
-          Выйти
-        </button>
+        <NavLink to="/">
+          <button
+            onClick={handleLogout}
+            className={styles.logoutButton}
+          >
+            Выйти
+          </button>
+        </NavLink>
       </div>
 
       <div className={styles.profileContent}>

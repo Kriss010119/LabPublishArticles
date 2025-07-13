@@ -5,6 +5,8 @@ import { DraftPage } from "./DraftsPage";
 import { CreateArticle } from "./CreateArticle";
 import { Routes, Route } from 'react-router-dom';
 import {Profile} from "./Profile";
+import OpenPage from "./OpenPage";
+import EditDraftPage from "./EditDraftPage";
 
 export const Home = () => {
     return (
@@ -22,7 +24,9 @@ export const Home = () => {
                     <Route path="/drafts" element={<DraftPage />} />
                     <Route path="/create-article" element={<CreateArticle />} />
                     <Route path="/profile" element={<Profile />} />
-                    
+                    <Route path="/article/:id" element={<OpenPage />} />
+                    <Route path="/drafts/:id" element={<OpenPage />} />
+                    <Route path="/drafts/:id/edit" element={<EditDraftPage />} />
                 </Routes>
             </main>
             <footer className={styles.footer}>

@@ -1,33 +1,92 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCreateDraftMutation } from '../api/postsAPI';
+import { useCreateDraftMutation, usePublishDraftMutation, useUpdateDraftMutation } from '../api/postsAPI';
+import MDEditor from '@uiw/react-md-editor';
 import styles from '../styles/CreateArticle.module.css';
 
-export const CreateArticle = () => {
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
-    const [tags, setTags] = useState('');
-    const [createDraft, { isLoading, error }] = useCreateDraftMutation();
+export const CreateArticle = ({ initialData }) => {
+    const [title, setTitle] = useState(initialData?.title || '');
+    const [content, setContent] = useState(initialData?.content || '');
+    const [tags, setTags] = useState(initialData?.tags?.join(', ') || '');
+    const [createDraft, { isLoading: isCreatingDraft, error: createError }] = useCreateDraftMutation();
+    const [publishDraft, { isLoading: isPublishing, error: publishError }] = usePublishDraftMutation();
+    const [updateDraft, { isLoading: isUpdating, error: updateError }] = useUpdateDraftMutation();
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+    const handleSaveDraft = async (e) => {
         e.preventDefault();
         try {
+            if (initialData?.id) {
+                try {
+                    await updateDraft({
+                        id: initialData.id,
+                        title,
+                        content,
+                        tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+                    }).unwrap();
+                    navigate(`/drafts/${initialData.id}`);
+                    console.log("Draft updated successfully");
+                    return; // Exit if update was successful
+                } catch (updateError) {
+                    console.log("Update failed, trying to create new draft");
+                }
+            }
+
             const result = await createDraft({
                 title,
                 content,
                 tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag),
             }).unwrap();
             navigate(`/drafts/${result.id}`);
+            console.log("New draft created with ID: ", result.id);
         } catch (err) {
-            console.error('Failed to create draft:', err);
+            console.error('Failed to save draft:', err);
         }
     };
 
+    const handlePublish = async (e) => {
+        e.preventDefault();
+        try {
+            let draftId = initialData?.id;
+
+            if (draftId) {
+                try {
+                    await updateDraft({
+                        id: draftId,
+                        title,
+                        content,
+                        tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+                    }).unwrap();
+                } catch (updateError) {
+                    const draftResult = await createDraft({
+                        title,
+                        content,
+                        tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+                    }).unwrap();
+                    draftId = draftResult.id;
+                }
+            } else {
+                const draftResult = await createDraft({
+                    title,
+                    content,
+                    tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+                }).unwrap();
+                draftId = draftResult.id;
+            }
+
+            const publishResult = await publishDraft(draftId).unwrap();
+            navigate(`/article/${publishResult.id}`);
+        } catch (err) {
+            console.error('Failed to publish:', err);
+        }
+    };
+
+    const error = createError || publishError || updateError;
+
     return (
-        <div className={styles.container}>
-            <h2>Создание новой статьи</h2>
-            <form onSubmit={handleSubmit}>
+        <div className={styles.container} data-color-mode="light">
+            <h2>{initialData?.id ? 'Редактирование черновика' : 'Создание новой статьи'}</h2>
+            <form>
                 <div className={styles.formGroup}>
                     <label>Заголовок</label>
                     <input
@@ -35,17 +94,17 @@ export const CreateArticle = () => {
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         required
-                        disabled={isLoading}
+                        disabled={isCreatingDraft || isPublishing || isUpdating}
                     />
                 </div>
                 <div className={styles.formGroup}>
                     <label>Содержание</label>
-                    <textarea
+                    <MDEditor
                         value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        required
-                        disabled={isLoading}
-                        rows={10}
+                        onChange={setContent}
+                        height={400}
+                        preview="edit"
+                        className={styles.editor}
                     />
                 </div>
                 <div className={styles.formGroup}>
@@ -54,17 +113,28 @@ export const CreateArticle = () => {
                         type="text"
                         value={tags}
                         onChange={(e) => setTags(e.target.value)}
-                        disabled={isLoading}
+                        disabled={isCreatingDraft || isPublishing || isUpdating}
                     />
                 </div>
-                {error && <div className={styles.error}>{error.data?.message || 'Ошибка создания'}</div>}
-                <button
-                    type="submit"
-                    className={styles.submitButton}
-                    disabled={isLoading}
-                >
-                    {isLoading ? 'Сохранение...' : 'Создать черновик'}
-                </button>
+                {error && <div className={styles.error}>{error.data?.message || 'Произошла ошибка'}</div>}
+                <div className={styles.buttonGroup}>
+                    <button
+                        type="button"
+                        onClick={handleSaveDraft}
+                        className={styles.saveButton}
+                        disabled={isCreatingDraft || isPublishing || isUpdating}
+                    >
+                        {isCreatingDraft || isUpdating ? 'Сохранение...' : 'Сохранить черновик'}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={handlePublish}
+                        className={styles.publishButton}
+                        disabled={isCreatingDraft || isPublishing || isUpdating}
+                    >
+                        {isPublishing ? 'Публикация...' : 'Опубликовать'}
+                    </button>
+                </div>
             </form>
         </div>
     );

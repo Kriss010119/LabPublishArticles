@@ -19,14 +19,14 @@ function Menu() {
         <nav className={styles.menu}>
             <ul className={styles.navList}>
                 <li className={styles.navItem}>
-                    <NavLink
-                        to="/"
-                        className={({ isActive }) =>
-                            isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
-                        }
-                    >
-                        Все статьи
-                    </NavLink>
+                        <NavLink
+                            to="/"
+                            className={({ isActive }) =>
+                                isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+                            }
+                        >
+                            Все статьи
+                        </NavLink>
                 </li>
                 {isAuth && (
                     <>
@@ -63,15 +63,7 @@ function Menu() {
                     </>
                 )}
                 <li className={styles.navItem}>
-                    {isAuth ? (
-                        <NavLink
-                            to="/"
-                            className={styles.navLink}
-                            onClick={handleLogout}
-                        >
-                            Выйти
-                        </NavLink>
-                    ) : (
+                    {!isAuth && (
                         <>
                             <button
                                 className={styles.navLink}

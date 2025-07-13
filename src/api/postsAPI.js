@@ -11,26 +11,23 @@ export const postsAPI = createApi({
             }
             return headers;
         },
-        validateStatus: (response) => {
-            if (response.status === 401) {
-                localStorage.removeItem('token');
-                window.location.reload();
-            }
-            return response.status >= 200 && response.status < 300;
-        },
     }),
+    tagTypes: ['Posts', 'Drafts'],
     endpoints: (builder) => ({
         getAllPosts: builder.query({
-            query: ({ page = 0, size = 20, tag, query } = {}) => ({
+            query: ({ page = 0, size = 21, tag, query } = {}) => ({
                 url: 'posts',
                 params: { page, size, tag, query }
             }),
-        }),
-        getPostById: builder.query({
-            query: (id) => `/posts/${id}`,
+            providesTags: ['Posts'],
         }),
         getAllDrafts: builder.query({
             query: () => '/drafts',
+            providesTags: ['Drafts'],
+        }),
+        getPostById: builder.query({
+            query: (id) => `/posts/${id}`,
+            providesTags: ['Posts'],
         }),
         getDraftById: builder.query({
             query: (id) => `/drafts/${id}`,

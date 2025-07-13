@@ -1,3 +1,26 @@
+.loadMoreButton {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #d4a373;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    align-items: center;
+}
+
+.loadMoreButton:hover {
+    background-color: #8f7040;
+}
+
+.loadMoreButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
 .card {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
@@ -148,4 +171,76 @@
 .loadMoreBtn:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
+}
+
+
+.filterControls {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+.filterGroup {
+    margin-bottom: 1rem;
+}
+
+.filterGroup label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.filterGroup input[type="text"],
+.filterGroup input[type="date"] {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.tagsFilter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.tagFilter {
+    padding: 0.3rem 0.6rem;
+    background: #e0e0e0;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.tagFilter:hover {
+    background: #d0d0d0;
+}
+
+.selectedTag {
+    background: rgba(186, 157, 118, 0.73);
+    color: white;
+}
+
+.clearFilter {
+    margin-left: 0.5rem;
+    padding: 0.3rem 0.6rem;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.clearFilter:hover {
+    background: #e9ecef;
+}
+
+.noResults {
+    padding: 2rem;
+    text-align: center;
+    color: #666;
 }
