@@ -46,7 +46,6 @@
     margin-left: 5px;
 }
 
-/* Для неактивных ссылок */
 .navLink[style*="pointer-events: none"] {
     color: #aaa;
     cursor: not-allowed;
