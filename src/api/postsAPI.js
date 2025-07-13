@@ -1,55 +1,87 @@
-import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
-
-// NEED TO REDO !!! NOT GOOD POSTS
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const postsAPI = createApi({
     reducerPath: "postsAPI",
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://support.sci-lab.example.com/',
+        baseUrl: 'http://89.169.180.108:8080/api/v1/',
+        prepareHeaders: (headers) => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                headers.set('Authorization', `Bearer ${token}`);
+            }
+            return headers;
+        },
+        validateStatus: (response) => {
+            if (response.status === 401) {
+                localStorage.removeItem('token');
+                window.location.reload();
+            }
+            return response.status >= 200 && response.status < 300;
+        },
     }),
     endpoints: (builder) => ({
-        postDraft: builder.query({
-            query: (id) => `/drafts`,
+        getAllPosts: builder.query({
+            query: ({ page = 0, size = 20, tag, query } = {}) => ({
+                url: 'posts',
+                params: { page, size, tag, query }
+            }),
+        }),
+        getPostById: builder.query({
+            query: (id) => `/posts/${id}`,
         }),
         getAllDrafts: builder.query({
-            query: (id) => `/drafts`,
+            query: () => '/drafts',
         }),
         getDraftById: builder.query({
             query: (id) => `/drafts/${id}`,
         }),
-        patchDraftById: builder.query({
-            query: (id) => `/drafts/${id}`,
+        createDraft: builder.mutation({
+            query: (body) => ({
+                url: '/drafts',
+                method: 'POST',
+                body,
+            }),
         }),
-        deleteDraftById: builder.query({
-            query: (id) => `/drafts/${id}`,
+        updateDraft: builder.mutation({
+            query: ({ id, ...body }) => ({
+                url: `/drafts/${id}`,
+                method: 'PATCH',
+                body,
+            }),
         }),
-        postDraftById: builder.query({
-            query: (id) => `/drafts/${id}/publish`,
+        deleteDraft: builder.mutation({
+            query: (id) => ({
+                url: `/drafts/${id}`,
+                method: 'DELETE',
+            }),
         }),
-        getAllPosts: builder.query({
-            query: (id) => `/posts`,
+        publishDraft: builder.mutation({
+            query: (id) => ({
+                url: `/drafts/${id}/publish`,
+                method: 'POST',
+            }),
         }),
-        getPostDraftById: builder.query({
-            query: (id) => `/posts/${id}`,
-        }),
-        postPostById: builder.query({
-            query: (id) => `/posts/${id}/unpublish`,
+        unpublishPost: builder.mutation({
+            query: (id) => ({
+                url: `/posts/${id}/unpublish`,
+                method: 'POST',
+            }),
         }),
         getAllTags: builder.query({
-            query: (id) => `/tags`,
-        })
-    })
-})
+            query: () => '/tags',
+        }),
+    }),
+});
 
 export const {
-    usePostDraftQuery,
+    useGetAllPostsQuery,
+    useGetPostByIdQuery,
     useGetAllDraftsQuery,
     useGetDraftByIdQuery,
-    usePatchDraftByIdQuery,
-    useDeleteDraftByIdQuery,
-    usePostDraftByIdQuery,
-    useGetAllPostsQuery,
-    useGetPostDraftByIdQuery,
-    usePostPostByIdQuery,
-    useGetAllTagsQuery
+    useCreateDraftMutation,
+    useUpdateDraftMutation,
+    useDeleteDraftMutation,
+    usePublishDraftMutation,
+    useUnpublishPostMutation,
+    useGetAllTagsQuery,
 } = postsAPI;

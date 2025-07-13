@@ -7,7 +7,7 @@ import { AuthModal } from './auth/AuthModule';
 
 function Menu() {
     const dispatch = useDispatch();
-    const { userData } = useSelector(state => state.user);
+    const {  userData } = useSelector(state => state.user);
     const isAuth = true;
     const [showAuthModal, setShowAuthModal] = useState(false);
 

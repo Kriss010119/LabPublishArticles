@@ -1,12 +1,7 @@
 import ArticleList from "../components/ArticleList";
 
-
 export const DraftPage = () => {
     return (
-        <>
-            <ArticleList state={"draft"}/>
-        </>
+        <ArticleList type="drafts" />
     );
-}
-
-export default DraftPage;
+};

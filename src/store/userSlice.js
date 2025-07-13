@@ -1,17 +1,17 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'http://your-api-url.com/auth';
+const API_URL = 'http://89.169.180.108:8080/api/v1/auth';
 
-// Асинхронные actions (thunks)
 export const loginUser = createAsyncThunk(
     'user/login',
     async (credentials, { rejectWithValue }) => {
         try {
             const response = await axios.post(`${API_URL}/login`, credentials);
+            localStorage.setItem('token', response.data.token);
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error.response.data.message || 'Ошибка входа');
         }
     }
 );
@@ -23,7 +23,7 @@ export const registerUser = createAsyncThunk(
             const response = await axios.post(`${API_URL}/register`, userData);
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error.response.data.message || 'Ошибка регистрации');
         }
     }
 );
@@ -31,21 +31,17 @@ export const registerUser = createAsyncThunk(
 const userSlice = createSlice({
     name: "user",
     initialState: {
-        isAuth: false,
+        isAuth: !!localStorage.getItem('token'),
         userData: null,
         loading: false,
         error: null,
         registerSuccess: false
     },
     reducers: {
-        // Синхронные actions
-        signIn: (state, action) => {
-            state.isAuth = true;
-            state.userData = action.payload;
-        },
         signOut: (state) => {
             state.isAuth = false;
             state.userData = null;
+            localStorage.removeItem('token');
         },
         clearError: (state) => {
             state.error = null;
@@ -63,11 +59,11 @@ const userSlice = createSlice({
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
                 state.isAuth = true;
-                state.userData = action.payload;
+                state.userData = action.payload.user;
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload?.message || 'Ошибка входа';
+                state.error = action.payload;
             })
             .addCase(registerUser.pending, (state) => {
                 state.loading = true;
@@ -79,17 +75,10 @@ const userSlice = createSlice({
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload?.message || 'Ошибка регистрации';
+                state.error = action.payload;
             });
     }
 });
 
-// Экспортируем только синхронные actions и reducer
-export const {
-    signIn,
-    signOut,
-    clearError,
-    resetRegisterStatus
-} = userSlice.actions;
-
+export const { signOut, clearError, resetRegisterStatus } = userSlice.actions;
 export default userSlice.reducer;

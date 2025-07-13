@@ -1,16 +1,22 @@
 import styles from '../styles/ArticleCard.module.css';
 
 const ArticleCard = ({ article }) => {
+    if (!article) return null;
+
     const MAX_WORDS = 30;
-    const words = article.content.split(' ');
+    const content = article.content || '';
+    const words = content.split(' ');
     const isContentLong = words.length > MAX_WORDS;
     const truncatedContent = isContentLong
         ? words.slice(0, MAX_WORDS).join(' ') + '...'
-        : article.content;
+        : content;
 
     return (
         <div className={styles.card}>
             <div className={styles.cardHeader}>
+                <div className={styles.dateBadge}>
+                    {article.published_at || ''}
+                </div>
                 <h3 className={styles.title}>{article.title}</h3>
                 <div className={styles.divider}></div>
             </div>
@@ -27,7 +33,7 @@ const ArticleCard = ({ article }) => {
 
             <div className={styles.cardFooter}>
                 <div className={styles.tags}>
-                    {article.tags.map(tag => (
+                    {(article.tags || []).map(tag => (
                         <span key={tag} className={styles.tag}>{tag}</span>
                     ))}
                 </div>

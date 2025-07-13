@@ -5,7 +5,7 @@ import styles from '../styles/Profile.module.css';
 
 export const Profile = () => {
   const dispatch = useDispatch();
-  const {  userData } = useSelector(state => state.user);
+  const { userData } = useSelector(state => state.user);
   const isAuth = true;
   const handleLogout = () => {
     dispatch(signOut());
